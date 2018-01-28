@@ -1,0 +1,29 @@
+logging:
+  level: 'debug'
+  ignoreLoggingFor: ["GithubConnector"]
+
+matrix:
+  url: "https://boom.com"
+  domain: "boom.com"
+  userId: "@yourbotname:boom.com"
+  accessToken: "TOKENGOESERE"
+
+groups:
+  - name:  "matrix-js-sdk"
+    owner: "matrix-org"
+    group: "+matrix-contributors:boom.com"
+  - name:  "synapse"
+    owner: "matrix-org"
+    group: "+matrix-contributors:boom.com"
+  - name:  "matrix-react-sdk"
+    owner: "matrix-org"
+    group: "+matrix-contributors:boom.com"
+  - name:  "matrix-doc"
+    owner: "matrix-org"
+    group: "+matrix-contributors:boom.com"
+  - name:  "matrix-android-sdk"
+    owner: "matrix-org"
+    group: "+matrix-contributors:boom.com"
+  - name:  "matrix-ios-sdk"
+    owner: "matrix-org"
+    group: "+matrix-contributors:boom.com"

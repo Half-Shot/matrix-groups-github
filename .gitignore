@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+# So you don't commit your config file, ouch!
+config.yaml
+
