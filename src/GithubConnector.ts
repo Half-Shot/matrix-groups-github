@@ -90,4 +90,8 @@ export class GithubConnector {
             this.usersToProcess.push(mapping);
         }
     }
+
+    ValidateGist(githubUsername: string, gistId: string): Promise<boolean> {
+
+    }
 }

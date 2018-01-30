@@ -1,6 +1,8 @@
 import { Configuration } from "./Config";
 import { GithubConnector } from "./GithubConnector";
 import {MatrixConnector} from "./MatrixConnector";
+import {BotConversationConnector} from "./BotConversationConnector";
+import {UserConsentMap} from "./UserConsentMap";
 import { Log } from "./Log";
 let log = new Log("main");
 
@@ -8,6 +10,9 @@ class Program {
     static config: Configuration;
     static githubConnector: GithubConnector;
     static matrixConnector: MatrixConnector;
+    static conversationConnector: BotConversationConnector;
+    static userConsentMap: UserConsentMap;
+
     static Main(args: string[]) {
         const CONFIG_FILE: string = args.length > 2 ? args[2] : "config.yaml";
         Log.CreateLogger();
@@ -16,8 +21,15 @@ class Program {
         this.config.parseConfiguration(CONFIG_FILE);
         Log.UpdateIgnoredModules(this.config.LoggingIgnoredModules);
         Log.UpdateLoggingLevel(this.config.LoggingLevel);
+        this.userConsentMap = new UserConsentMap("users.json");
+        this.userConsentMap.LoadFromFile();
         this.StartMatrixConnector().then(() => {
             this.StartGithubConnector();
+            this.StartBotConversationConnector(
+                this.matrixConnector.MatrixClient,
+                this.userConsentMap,
+                this.githubConnector
+            );
         });
     }
 
@@ -44,7 +56,10 @@ class Program {
     static StartMatrixConnector() : Promise<void> {
         log.debug("Creating new instance of MatrixConnector");
         this.matrixConnector = new MatrixConnector(this.config.MatrixConfig,
-            () => {return this.githubConnector.UsersToProcess();},
+            () => {
+                return [];
+                //return this.githubConnector.UsersToProcess();
+            },
             Program.DummyGithubToMatrixIdMapper,
         );
         return this.matrixConnector.ConnectClient().then(() => {
@@ -53,6 +68,11 @@ class Program {
             log.error("Couldn't connect to matrix. Crashing hard.");
             process.exit(1);
         });
+    }
+
+    static StartBotConversationConnector() {
+        this.conversationConnector = new BotConversationConnector(this.matrixConnector.MatrixClient);
+        this.conversationConnector.Connect();
     }
 }
 

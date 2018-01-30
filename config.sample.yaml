@@ -4,6 +4,7 @@ logging:
 
 matrix:
   url: "https://boom.com"
+  isUrl: "https://vector.im"
   domain: "boom.com"
   userId: "@yourbotname:boom.com"
   accessToken: "TOKENGOESERE"

@@ -1,9 +1,9 @@
 import {MatrixConfiguration} from "./MatrixConfiguration";
 import Timer = NodeJS.Timer;
 import {UserGroupMapping} from "./UserGroupMapping";
-import { Log } from "./Log";
 import * as matrix from "matrix-js-sdk";
 import * as request from "request";
+import { Log } from "./Log";
 let log = new Log("MatrixConnector");
 
 export type GetToProcessDelegate = () => UserGroupMapping[];
@@ -39,6 +39,10 @@ export class MatrixConnector {
         this.config = config;
         this.getToProcess = getToProcess;
         this.mapGithubToMatrix = mapGithubToMatrix;
+    }
+
+    get MatrixClient(): any {
+        return this.client;
     }
 
     GetUsersInGroup(groupId: any): Promise<string[]> {
